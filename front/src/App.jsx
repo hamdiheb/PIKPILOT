@@ -4,9 +4,9 @@ import Home from '../pages/Home'
 export default function App() {
   return (
     <BrowserRouter>
+      <Navbar />
       <Routes>
-        <Navbar />
-        <Route element="/" path={<Home />} />
+        <Route path="/" element={<Home />} />
       </Routes>
     </BrowserRouter>
   )
