@@ -1,15 +1,11 @@
 import Hero from '../components/Hero'
-import Filters from '../components/Filters'
-import Main from '../components/Main'
+import Movies from '../components/Movies'
 export default function Home() {
   return (
     <>
       <Hero />
-
-      <section className="flex">
-        <Filters />
-        <Main />
-      </section>
+      <Movies />
+      <section className="flex"></section>
     </>
   )
 }
