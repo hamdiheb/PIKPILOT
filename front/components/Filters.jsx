@@ -11,17 +11,39 @@ export default function Filters() {
     fetchList()
   }, [])
   return (
-    <section>
-      <select>
-        <option value="">All genres</option>
-        {list.map((element) => {
-          return (
-            <option value={element.id} key={element.id}>
-              {element.name}
-            </option>
-          )
-        })}
-      </select>
+    <section className="bg-[#F5F2F0] px-[6%] pt-[60px] md:px-[16%] md:pt-[80px]">
+      <article className="flex flex-wrap items-end gap-x-[18px] gap-y-[12px]">
+        <label className="flex flex-col gap-[8px]">
+          <span className="font-archivo text-[11px] font-extrabold tracking-[0.08em] text-[#EC3013] uppercase">
+            Genre
+          </span>
+
+          <span className="relative inline-block">
+            <select className="font-archivo h-[42px] cursor-pointer appearance-none border border-solid border-[#201E1D] bg-transparent pr-[38px] pl-[14px] text-[12px] font-extrabold tracking-[0.08em] text-[#201E1D] uppercase transition-colors duration-200 hover:border-[#EC3013] hover:text-[#EC3013] focus:border-[#EC3013] focus:outline-none">
+              <option value="">All genres</option>
+              {list.map((element) => {
+                return (
+                  <option value={element.id} key={element.id}>
+                    {element.name}
+                  </option>
+                )
+              })}
+            </select>
+
+            <svg
+              width="14"
+              height="14"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="3"
+              className="pointer-events-none absolute top-1/2 right-[14px] -translate-y-1/2 text-[#201E1D]"
+            >
+              <path d="M6 9l6 6 6-6" />
+            </svg>
+          </span>
+        </label>
+      </article>
     </section>
   )
 }
