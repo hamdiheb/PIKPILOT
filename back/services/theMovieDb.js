@@ -1,8 +1,10 @@
-const baseUrl = process.env.TMDB_URL_BASE
-const token = process.env.TMDB_TOKEN
+// Read at call time, not module load time: ES imports are evaluated before the
+// statements that load .env, so module-level reads would capture undefined.
+const config = () => ({ baseUrl: process.env.TMDB_URL_BASE, token: process.env.TMDB_TOKEN })
 
 export async function moviesDatabase(req, res) {
   try {
+    const { baseUrl, token } = config()
     const page = Math.min(Math.max(parseInt(req.query.page) || 1, 1), 500)
 
     const request = await fetch(`${baseUrl}/discover/movie?page=${page}`, {
@@ -27,6 +29,7 @@ export async function moviesDatabase(req, res) {
 
 export async function genreList(req, res) {
   try {
+    const { baseUrl, token } = config()
     const request = await fetch(`${baseUrl}/genre/movie/list`, {
       method: 'GET',
       headers: {

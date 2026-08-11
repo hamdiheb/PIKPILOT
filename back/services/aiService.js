@@ -1,11 +1,10 @@
 import { OpenRouter } from '@openrouter/sdk'
 
 const baseUrl = 'https://openrouter.ai/api/v1/chat/completions'
-const apiKey = process.env.OPEN_ROUTER_API_KEY
 
 export async function aiSearcher(req, res) {
   const client = new OpenRouter({
-    apiKey: apiKey,
+    apiKey: process.env.OPEN_ROUTER_API_KEY,
     httpReferer: '<YOUR_SITE_URL>', // Optional. Site URL for rankings on openrouter.ai.
     appTitle: '<YOUR_SITE_NAME>', // Optional. Site title for rankings on openrouter.ai.
   })
