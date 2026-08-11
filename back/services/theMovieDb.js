@@ -3,7 +3,9 @@ const token = process.env.TMDB_TOKEN
 
 export async function moviesDatabase(req, res) {
   try {
-    const request = await fetch(baseUrl, {
+    const page = Math.min(Math.max(parseInt(req.query.page) || 1, 1), 500)
+
+    const request = await fetch(`${baseUrl}?page=${page}`, {
       method: 'GET',
       headers: {
         accept: 'application/json',
