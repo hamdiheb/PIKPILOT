@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import Moviecomponent from './Moviecomponent'
 import Pagebutton from './Pagebutton'
 export default function Movies(props) {
-  const { movies, setMovies } = props
+  const { movies, setMovies, genre } = props
   const WINDOW = 10
 
   const [currentPage, setCurrentPage] = useState(1)
@@ -12,6 +12,12 @@ export default function Movies(props) {
   // on and slides in both directions instead of only forward.
   const start = Math.max(1, Math.min(currentPage - Math.floor(WINDOW / 2), lastPage - WINDOW + 1))
   const pageButton = []
+
+  // genre_ids holds numbers but a <select> value is always a string, so the
+  // comparison needs Number(). An empty genre means "All genres".
+  const visibleMovies = genre
+    ? movies.filter((movie) => movie.genre_ids.includes(Number(genre)))
+    : movies
 
   for (let i = start; i < start + WINDOW && i <= lastPage; i++) {
     pageButton.push(
@@ -32,12 +38,12 @@ export default function Movies(props) {
     <section className="bg-[#F5F2F0] px-[6%] py-[60px] md:px-[16%] md:py-[80px]">
       <article className="flex items-end justify-between gap-4 border-b border-solid border-[#201E1D] pb-[14px]">
         <span className="font-archivo shrink-0 text-[11px] font-extrabold tracking-[0.08em] text-[#EC3013] uppercase">
-          {movies.length} titles
+          {visibleMovies.length} titles
         </span>
       </article>
 
       <article className="mt-[32px] grid grid-cols-2 gap-x-[18px] gap-y-[38px] sm:grid-cols-3 lg:grid-cols-4">
-        {movies.map((movie) => (
+        {visibleMovies.map((movie) => (
           <Moviecomponent
             key={movie.id}
             title={movie.title}

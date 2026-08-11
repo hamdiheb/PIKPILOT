@@ -4,11 +4,12 @@ import Movies from '../components/Movies'
 import { useState } from 'react'
 export default function Home() {
   const [movies, setMovies] = useState([])
+  const [genre, setGenre] = useState('')
   return (
     <>
       <Hero />
-      <Filters movies={movies} setMovies={setMovies} />
-      <Movies movies={movies} setMovies={setMovies} />
+      <Filters genre={genre} setGenre={setGenre} />
+      <Movies movies={movies} setMovies={setMovies} genre={genre} />
 
       <section className="flex"></section>
     </>

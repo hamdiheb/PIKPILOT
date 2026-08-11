@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 
-export default function Filters() {
+export default function Filters(props) {
+  const { genre, setGenre } = props
   const [list, setList] = useState([])
   useEffect(() => {
     async function fetchList() {
@@ -19,7 +20,10 @@ export default function Filters() {
           </span>
 
           <span className="relative inline-block">
-            <select className="font-archivo h-[42px] cursor-pointer appearance-none border border-solid border-[#201E1D] bg-transparent pr-[38px] pl-[14px] text-[12px] font-extrabold tracking-[0.08em] text-[#201E1D] uppercase transition-colors duration-200 hover:border-[#EC3013] hover:text-[#EC3013] focus:border-[#EC3013] focus:outline-none">
+            <select
+              onChange={(event) => setGenre(event.currentTarget.value)}
+              className="font-archivo h-[42px] cursor-pointer appearance-none border border-solid border-[#201E1D] bg-transparent pr-[38px] pl-[14px] text-[12px] font-extrabold tracking-[0.08em] text-[#201E1D] uppercase transition-colors duration-200 hover:border-[#EC3013] hover:text-[#EC3013] focus:border-[#EC3013] focus:outline-none"
+            >
               <option value="">All genres</option>
               {list.map((element) => {
                 return (
