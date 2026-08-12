@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import Moviecomponent from './Moviecomponent'
 import Pagebutton from './Pagebutton'
 import { API_URL } from '../src/api'
@@ -62,6 +62,26 @@ export default function Movies(props) {
       current = false
     }
   }, [currentPage, genre, debouncedSearch])
+
+  // The pagination sits at the bottom of a long grid, so a page change has to
+  // take you back up to the first row. It stops at the filter bar rather than
+  // the document top so the controls stay in view.
+  const firstRender = useRef(true)
+  useEffect(() => {
+    if (firstRender.current) {
+      firstRender.current = false
+      return
+    }
+
+    const target = document.getElementById('browse')
+    if (!target) return
+
+    const navHeight = document.querySelector('nav')?.offsetHeight ?? 0
+    const top = target.getBoundingClientRect().top + window.scrollY - navHeight - 12
+    const reduceMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches
+
+    window.scrollTo({ top: Math.max(0, top), behavior: reduceMotion ? 'auto' : 'smooth' })
+  }, [currentPage])
 
   const gridClass =
     'mt-[32px] grid grid-cols-2 gap-x-[18px] gap-y-[38px] sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5'

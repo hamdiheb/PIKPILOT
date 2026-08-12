@@ -14,7 +14,7 @@ export default function Filters(props) {
   }, [])
 
   return (
-    <section className="shell pt-[44px] md:pt-[56px]">
+    <section id="browse" className="shell pt-[44px] md:pt-[56px] scroll-mt-[80px]">
       {/* The controls and the count they produce share one bar, so the filters
           read as the header of the results rather than a separate block. */}
       <article className="flex flex-wrap items-end justify-between gap-x-[18px] gap-y-[14px] border-b border-solid border-[#201E1D] pb-[16px]">

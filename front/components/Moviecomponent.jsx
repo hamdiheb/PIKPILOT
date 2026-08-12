@@ -1,44 +1,50 @@
+import { Link } from 'react-router-dom'
 export default function Moviecomponent(props) {
   const { title, original_language, overview, poster_path, release_date, vote_average, id } = props
 
+  // The hover styling below keys off `group`, so it lives on the anchor and not
+  // on both elements. An anchor also brings the pointer cursor, the keyboard
+  // focus, and middle-click to open in a new tab on its own.
   return (
-    <article id={id} className="group flex cursor-pointer flex-col">
-      <figure className="relative aspect-[2/3] w-full overflow-hidden bg-[#E3DED9]">
-        {poster_path ? (
-          <img
-            src={`https://image.tmdb.org/t/p/w500${poster_path}`}
-            alt={title}
-            loading="lazy"
-            className="h-full w-full object-cover transition-opacity duration-200 group-hover:opacity-85"
-          />
-        ) : (
-          <span className="font-archivo absolute inset-0 flex items-center justify-center px-[10px] text-center text-[11px] text-[#8A8580]">
-            No poster
+    <Link to={`/movie/${id}`} className="group block">
+      <article className="flex flex-col">
+        <figure className="relative aspect-[2/3] w-full overflow-hidden bg-[#E3DED9]">
+          {poster_path ? (
+            <img
+              src={`https://image.tmdb.org/t/p/w500${poster_path}`}
+              alt={title}
+              loading="lazy"
+              className="h-full w-full object-cover transition-opacity duration-200 group-hover:opacity-85"
+            />
+          ) : (
+            <span className="font-archivo absolute inset-0 flex items-center justify-center px-[10px] text-center text-[11px] text-[#8A8580]">
+              No poster
+            </span>
+          )}
+
+          <span className="font-archivo absolute top-0 left-0 bg-[#EC3013] px-[8px] py-[4px] text-[12px] font-extrabold text-[#F5F2F0]">
+            {vote_average?.toFixed(1)}
           </span>
-        )}
 
-        <span className="font-archivo absolute top-0 left-0 bg-[#EC3013] px-[8px] py-[4px] text-[12px] font-extrabold text-[#F5F2F0]">
-          {vote_average?.toFixed(1)}
-        </span>
+          <span className="font-archivo absolute right-0 bottom-0 bg-[#201E1D] px-[7px] py-[3px] text-[10px] font-extrabold tracking-[0.08em] text-[#F5F2F0] uppercase">
+            {original_language}
+          </span>
+        </figure>
 
-        <span className="font-archivo absolute right-0 bottom-0 bg-[#201E1D] px-[7px] py-[3px] text-[10px] font-extrabold tracking-[0.08em] text-[#F5F2F0] uppercase">
-          {original_language}
-        </span>
-      </figure>
-
-      {/* Two reserved lines keep the year and overview on the same baseline as
+        {/* Two reserved lines keep the year and overview on the same baseline as
           the neighbouring cards when a title wraps. */}
-      <h3 className="font-archivo mt-[12px] line-clamp-2 min-h-[2.3em] text-[15px] leading-[1.15] font-extrabold tracking-[-0.01em] text-[#201E1D] transition-colors duration-200 group-hover:text-[#EC3013] md:text-[17px]">
-        {title}
-      </h3>
+        <h3 className="font-archivo mt-[12px] line-clamp-2 min-h-[2.3em] text-[15px] leading-[1.15] font-extrabold tracking-[-0.01em] text-[#201E1D] transition-colors duration-200 group-hover:text-[#EC3013] md:text-[17px]">
+          {title}
+        </h3>
 
-      <span className="font-archivo mt-[4px] text-[12px] text-[#8A8580]">
-        {release_date?.slice(0, 4)}
-      </span>
+        <span className="font-archivo mt-[4px] text-[12px] text-[#8A8580]">
+          {release_date?.slice(0, 4)}
+        </span>
 
-      <p className="font-archivo mt-[8px] line-clamp-3 text-[13px] leading-[1.45] text-[#5C5854]">
-        {overview}
-      </p>
-    </article>
+        <p className="font-archivo mt-[8px] line-clamp-3 text-[13px] leading-[1.45] text-[#5C5854]">
+          {overview}
+        </p>
+      </article>
+    </Link>
   )
 }
