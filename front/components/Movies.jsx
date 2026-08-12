@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import Moviecomponent from './Moviecomponent'
 import Pagebutton from './Pagebutton'
+import { API_URL } from '../src/api'
 export default function Movies(props) {
   const { movies, setMovies, genre, searchMovie } = props
   const WINDOW = 10
@@ -43,7 +44,7 @@ export default function Movies(props) {
 
     async function fetchMovies() {
       const req = await fetch(
-        `http://localhost:3000/movies?page=${currentPage}` +
+        `${API_URL}/movies?page=${currentPage}` +
           `${genre ? `&genre=${genre}` : ''}` +
           `${debouncedSearch ? `&search=${encodeURIComponent(debouncedSearch)}` : ''}`,
       )

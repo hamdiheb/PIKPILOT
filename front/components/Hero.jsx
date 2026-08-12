@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import FoldText from './UI/FoldText'
+import { API_URL } from '../src/api'
 export default function Hero() {
   const [query, setQuery] = useState('')
   const [suggestions, setSuggestions] = useState('')
@@ -7,7 +8,7 @@ export default function Hero() {
   async function renderInput() {
     if (!query.trim()) return
 
-    const res = await fetch('http://localhost:3000/suggestion', {
+    const res = await fetch(`${API_URL}/suggestion`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

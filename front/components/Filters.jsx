@@ -1,11 +1,12 @@
 import { use, useEffect, useState } from 'react'
+import { API_URL } from '../src/api'
 
 export default function Filters(props) {
   const { genre, setGenre, setSearchMovie } = props
   const [list, setList] = useState([])
   useEffect(() => {
     async function fetchList() {
-      const request = await fetch('http://localhost:3000/list')
+      const request = await fetch(`${API_URL}/list`)
       const data = await request.json()
       setList(data.message.genres)
     }
