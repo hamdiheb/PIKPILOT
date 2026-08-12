@@ -48,6 +48,35 @@ export async function moviesDatabase(req, res) {
   }
 }
 
+// The AI route gets bare titles back from the model and needs the real record
+// behind each one — the id above all, since that is what the card links to.
+// Not a request handler: it is called server-side, one call per suggestion.
+export async function findMovieByTitle(title, year) {
+  const { baseUrl, token } = config()
+
+  const params = new URLSearchParams({ query: title })
+  if (year) params.set('primary_release_year', String(year))
+
+  const request = await fetch(`${baseUrl}/search/movie?${params}`, {
+    method: 'GET',
+    headers: {
+      accept: 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+  })
+
+  if (!request.ok) return null
+
+  const response = await request.json()
+  const first = response.results?.[0]
+
+  // Models are confident about titles and vague about years, so a year that
+  // matches nothing is dropped rather than allowed to lose the film.
+  if (!first && year) return findMovieByTitle(title, null)
+
+  return first ?? null
+}
+
 export async function movieDetails(req, res) {
   try {
     const { baseUrl, token } = config()
