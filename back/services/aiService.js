@@ -11,7 +11,7 @@ export async function aiSearcher(req, res) {
 
   const completion = await client.chat.send({
     chatRequest: {
-      model: 'tencent/hy3',
+      model: 'nvidia/nemotron-3-ultra-550b-a55b:free',
       messages: [
         {
           role: 'user',

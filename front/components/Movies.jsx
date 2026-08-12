@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import Moviecomponent from './Moviecomponent'
 import Pagebutton from './Pagebutton'
 export default function Movies(props) {
-  const { movies, setMovies, genre } = props
+  const { movies, setMovies, genre, searchMovie } = props
   const WINDOW = 10
 
   const [currentPage, setCurrentPage] = useState(1)
@@ -15,10 +15,14 @@ export default function Movies(props) {
 
   // genre_ids holds numbers but a <select> value is always a string, so the
   // comparison needs Number(). An empty genre means "All genres".
-  const visibleMovies = genre
+
+  let visibleMovies = genre
     ? movies.filter((movie) => movie.genre_ids.includes(Number(genre)))
     : movies
 
+  visibleMovies = searchMovie
+    ? movies.filter((movie) => movie.title.toUpperCase().includes(searchMovie.toUpperCase()))
+    : movies
   for (let i = start; i < start + WINDOW && i <= lastPage; i++) {
     pageButton.push(
       <Pagebutton key={i} value={i} isActive={i === currentPage} setCurrentPage={setCurrentPage} />,
@@ -32,7 +36,7 @@ export default function Movies(props) {
       setLastPage(data.message.total_pages)
     }
     fetchMovies()
-  }, [currentPage])
+  }, [currentPage, searchMovie])
 
   return (
     <section className="bg-[#F5F2F0] px-[6%] py-[60px] md:px-[16%] md:py-[80px]">
