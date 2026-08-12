@@ -19,13 +19,16 @@ const peacock = (query) => `https://www.peacocktv.com/search?q=${query}`
 const BY_PROVIDER_ID = {
   2: apple, // Apple TV Store
   3: (query) => `https://play.google.com/store/search?q=${query}&c=movies`,
+  7: (query) => `https://www.fandangoathome.com/search?q=${query}`, // ex-Vudu
   8: netflix,
   9: amazon, // Amazon Prime Video
   10: amazon, // Amazon Video, the rent and buy storefront
   11: (query) => `https://mubi.com/en/search/films?query=${query}`,
   15: (query) => `https://www.hulu.com/search?q=${query}`,
+  35: (query) => `https://www.rakuten.tv/search?q=${query}`,
   43: (query) => `https://www.starz.com/us/en/search?q=${query}`,
   73: (query) => `https://tubitv.com/search/${query}`,
+  84: (query) => `https://video.unext.jp/freeword?query=${query}`,
   119: amazon,
   122: disney,
   175: netflix,
@@ -55,6 +58,9 @@ function byName(name) {
   const clean = name.trim()
   if (clean.endsWith('Amazon Channel')) return amazon
   if (clean.endsWith('Apple TV Channel')) return apple
+  // Amazon keeps spinning up tiers under its own name — "Amazon Video",
+  // "Amazon Prime Video with Ads" — and they all search from the same place.
+  if (clean.startsWith('Amazon ')) return amazon
   return null
 }
 
