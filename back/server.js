@@ -5,7 +5,7 @@ import express from 'express'
 import cors from 'cors'
 import rateLimit from 'express-rate-limit'
 import { aiSearcher } from './services/aiService.js'
-import { moviesDatabase, genreList } from './services/theMovieDb.js'
+import { moviesDatabase, movieDetails, genreList } from './services/theMovieDb.js'
 // Resolved against this file, not the working directory, so the server picks up
 // back/.env whether it is started from the repo root or from back/.
 dotenv.config({ path: join(dirname(fileURLToPath(import.meta.url)), '.env') })
@@ -50,6 +50,7 @@ app.use(generalLimiter)
 
 app.post('/suggestion', suggestionLimiter, aiSearcher)
 app.get('/movies', moviesDatabase)
+app.get('/movies/:id', movieDetails)
 app.get('/list', genreList)
 
 const port = process.env.PORT || 3000

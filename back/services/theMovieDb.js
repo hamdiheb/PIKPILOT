@@ -48,6 +48,51 @@ export async function moviesDatabase(req, res) {
   }
 }
 
+export async function movieDetails(req, res) {
+  try {
+    const { baseUrl, token } = config()
+
+    // The id lands in the TMDB path itself, so anything that is not digits is
+    // refused here rather than being interpolated into the URL.
+    const { id } = req.params
+    if (!/^\d+$/.test(id)) {
+      return res.status(400).json({ message: 'Invalid movie id' })
+    }
+
+    // The detail view needs the cast, the trailer and the streaming sources
+    // alongside the film itself. append_to_response folds all four into one
+    // upstream call instead of the four round trips separate /credits, /videos
+    // and /watch/providers fetches would cost. The slash in "watch/providers"
+    // is part of the key TMDB expects, and is also the key it answers with.
+    const url = `${baseUrl}/movie/${id}?append_to_response=credits,videos,watch/providers`
+
+    const request = await fetch(url, {
+      method: 'GET',
+      headers: {
+        accept: 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+    })
+
+    // A hand-edited URL is a normal thing for a browser to send, not a server
+    // fault, so a missing film keeps its own status instead of being flattened
+    // into the 500 below.
+    if (request.status === 404) {
+      return res.status(404).json({ message: 'Movie not found' })
+    }
+
+    if (!request.ok) {
+      throw new Error(`TMDB responded ${request.status} ${request.statusText}`)
+    }
+
+    const response = await request.json()
+    return res.status(200).json({ message: response })
+  } catch (error) {
+    console.error('TMDB request failed:', error.message)
+    return res.status(500).json({ message: 'Could not fetch movie' })
+  }
+}
+
 export async function genreList(req, res) {
   try {
     const { baseUrl, token } = config()
