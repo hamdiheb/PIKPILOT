@@ -78,7 +78,7 @@ export default function Mascot({ size = 40, className = '' }) {
       viewBox="0 0 48 48"
       fill="none"
       role="img"
-      aria-label="Streamfinder mascot"
+      aria-label="PikPilot mascot"
     >
       <g className="mascot-body">
         {/* antenna */}

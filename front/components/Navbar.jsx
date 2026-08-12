@@ -11,7 +11,7 @@ export default function Navbar() {
             className="mascot-link font-archivo flex items-center gap-[10px] text-[20px] font-extrabold text-[#201E1D]"
           >
             <Mascot size={38} />
-            STREAMFINDER
+            PIKPILOT
           </Link>
         </article>
 
