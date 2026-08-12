@@ -12,6 +12,13 @@ dotenv.config({ path: join(dirname(fileURLToPath(import.meta.url)), '.env') })
 
 const app = express()
 
+// Render terminates TLS at its own proxy, so every request arrives from the
+// proxy's IP. Without this, express-rate-limit keys all traffic to that single
+// address and the limits below become one shared budget for the whole internet,
+// which one caller can exhaust for everybody. 1 = trust exactly Render's hop,
+// so req.ip is the real client and X-Forwarded-For cannot be spoofed past it.
+app.set('trust proxy', 1)
+
 // Without an explicit origin, cors() reflects every requester, which would let
 // any site on the internet spend our OpenRouter credits through /suggestion.
 const allowedOrigins = process.env.FRONTEND_URL
