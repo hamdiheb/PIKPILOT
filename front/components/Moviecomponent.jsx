@@ -26,7 +26,9 @@ export default function Moviecomponent(props) {
         </span>
       </figure>
 
-      <h3 className="font-archivo mt-[12px] text-[15px] font-extrabold leading-[1.15] tracking-[-0.01em] text-[#201E1D] transition-colors duration-200 group-hover:text-[#EC3013] md:text-[17px]">
+      {/* Two reserved lines keep the year and overview on the same baseline as
+          the neighbouring cards when a title wraps. */}
+      <h3 className="font-archivo mt-[12px] line-clamp-2 min-h-[2.3em] text-[15px] leading-[1.15] font-extrabold tracking-[-0.01em] text-[#201E1D] transition-colors duration-200 group-hover:text-[#EC3013] md:text-[17px]">
         {title}
       </h3>
 

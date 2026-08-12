@@ -4,3 +4,24 @@
 @theme {
   --font-archivo: 'Archivo', system-ui, sans-serif;
 }
+
+body {
+  background-color: #f5f2f0;
+  color: #201e1d;
+}
+
+/* The one content column. Everything — nav, hero, filters, grid — sits on it so
+   the page has a single left and right edge instead of a percentage gutter that
+   grows with the viewport. */
+.shell {
+  margin-inline: auto;
+  width: 100%;
+  max-width: 1280px;
+  padding-inline: 24px;
+}
+
+@media (min-width: 768px) {
+  .shell {
+    padding-inline: 40px;
+  }
+}

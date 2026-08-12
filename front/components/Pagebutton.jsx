@@ -4,7 +4,7 @@ export default function Pagebutton(props) {
     <button
       value={value}
       disabled={disabled}
-      className={`font-archivo flex h-[38px] min-w-[38px] items-center justify-center border border-solid px-[10px] text-[12px] font-extrabold tracking-[0.08em] uppercase transition-colors duration-200 ${
+      className={`font-archivo flex h-[38px] min-w-[38px] items-center justify-center border border-solid px-[10px] text-[12px] font-extrabold tracking-[0.08em] uppercase transition-colors duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#EC3013] ${
         isActive
           ? 'cursor-default border-[#201E1D] bg-[#201E1D] text-[#F5F2F0]'
           : disabled
