@@ -13,16 +13,15 @@ export default function Movies(props) {
   const start = Math.max(1, Math.min(currentPage - Math.floor(WINDOW / 2), lastPage - WINDOW + 1))
   const pageButton = []
 
-  // genre_ids holds numbers but a <select> value is always a string, so the
-  // comparison needs Number(). An empty genre means "All genres".
+  // A new genre means a different result set, so the page we are on no longer
+  // exists in it. Resetting during render rather than in an effect keeps the
+  // fetch below from firing once for the old page and again for page 1.
+  const [prevGenre, setPrevGenre] = useState(genre)
+  if (genre !== prevGenre) {
+    setPrevGenre(genre)
+    setCurrentPage(1)
+  }
 
-  let visibleMovies = genre
-    ? movies.filter((movie) => movie.genre_ids.includes(Number(genre)))
-    : movies
-
-  visibleMovies = searchMovie
-    ? movies.filter((movie) => movie.title.toUpperCase().includes(searchMovie.toUpperCase()))
-    : movies
   for (let i = start; i < start + WINDOW && i <= lastPage; i++) {
     pageButton.push(
       <Pagebutton key={i} value={i} isActive={i === currentPage} setCurrentPage={setCurrentPage} />,
@@ -30,24 +29,26 @@ export default function Movies(props) {
   }
   useEffect(() => {
     async function fetchMovies() {
-      const req = await fetch(`http://localhost:3000/movies?page=${currentPage}`)
+      const req = await fetch(
+        `http://localhost:3000/movies?page=${currentPage}${genre ? `&genre=${genre}` : ''}`,
+      )
       const data = await req.json()
       setMovies(data.message.results)
       setLastPage(data.message.total_pages)
     }
     fetchMovies()
-  }, [currentPage, searchMovie])
+  }, [currentPage, genre])
 
   return (
     <section className="bg-[#F5F2F0] px-[6%] py-[60px] md:px-[16%] md:py-[80px]">
       <article className="flex items-end justify-between gap-4 border-b border-solid border-[#201E1D] pb-[14px]">
         <span className="font-archivo shrink-0 text-[11px] font-extrabold tracking-[0.08em] text-[#EC3013] uppercase">
-          {visibleMovies.length} titles
+          {movies.length} titles
         </span>
       </article>
 
       <article className="mt-[32px] grid grid-cols-2 gap-x-[18px] gap-y-[38px] sm:grid-cols-3 lg:grid-cols-4">
-        {visibleMovies.map((movie) => (
+        {movies.map((movie) => (
           <Moviecomponent
             key={movie.id}
             title={movie.title}

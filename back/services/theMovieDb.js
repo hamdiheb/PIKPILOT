@@ -6,14 +6,20 @@ export async function moviesDatabase(req, res) {
   try {
     const { baseUrl, token } = config()
     const page = Math.min(Math.max(parseInt(req.query.page) || 1, 1), 500)
+    // with_genres takes comma-separated TMDB ids, so anything that is not digits
+    // and commas is dropped instead of being interpolated into the URL.
+    const genre = /^[\d,]+$/.test(req.query.genre ?? '') ? req.query.genre : ''
 
-    const request = await fetch(`${baseUrl}/discover/movie?page=${page}`, {
-      method: 'GET',
-      headers: {
-        accept: 'application/json',
-        Authorization: `Bearer ${token}`,
+    const request = await fetch(
+      `${baseUrl}/discover/movie?page=${page}${genre ? `&with_genres=${genre}` : ''}`,
+      {
+        method: 'GET',
+        headers: {
+          accept: 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
       },
-    })
+    )
 
     if (!request.ok) {
       throw new Error(`TMDB responded ${request.status} ${request.statusText}`)
