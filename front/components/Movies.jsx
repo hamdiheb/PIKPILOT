@@ -13,12 +13,21 @@ export default function Movies(props) {
   const start = Math.max(1, Math.min(currentPage - Math.floor(WINDOW / 2), lastPage - WINDOW + 1))
   const pageButton = []
 
-  // A new genre means a different result set, so the page we are on no longer
-  // exists in it. Resetting during render rather than in an effect keeps the
-  // fetch below from firing once for the old page and again for page 1.
-  const [prevGenre, setPrevGenre] = useState(genre)
-  if (genre !== prevGenre) {
-    setPrevGenre(genre)
+  // Every keystroke would otherwise be a round trip, so the search term only
+  // reaches the request once typing pauses.
+  const [debouncedSearch, setDebouncedSearch] = useState(searchMovie)
+  useEffect(() => {
+    const timer = setTimeout(() => setDebouncedSearch(searchMovie), 400)
+    return () => clearTimeout(timer)
+  }, [searchMovie])
+
+  // A new genre or search term means a different result set, so the page we are
+  // on no longer exists in it. Resetting during render rather than in an effect
+  // keeps the fetch below from firing once for the old page and again for page 1.
+  const filters = `${genre}|${debouncedSearch}`
+  const [prevFilters, setPrevFilters] = useState(filters)
+  if (filters !== prevFilters) {
+    setPrevFilters(filters)
     setCurrentPage(1)
   }
 
@@ -28,16 +37,27 @@ export default function Movies(props) {
     )
   }
   useEffect(() => {
+    // Responses can land out of order once the term changes mid-flight, so a
+    // superseded request is not allowed to write its results.
+    let current = true
+
     async function fetchMovies() {
       const req = await fetch(
-        `http://localhost:3000/movies?page=${currentPage}${genre ? `&genre=${genre}` : ''}`,
+        `http://localhost:3000/movies?page=${currentPage}` +
+          `${genre ? `&genre=${genre}` : ''}` +
+          `${debouncedSearch ? `&search=${encodeURIComponent(debouncedSearch)}` : ''}`,
       )
       const data = await req.json()
+      if (!current) return
       setMovies(data.message.results)
       setLastPage(data.message.total_pages)
     }
     fetchMovies()
-  }, [currentPage, genre])
+
+    return () => {
+      current = false
+    }
+  }, [currentPage, genre, debouncedSearch])
 
   return (
     <section className="bg-[#F5F2F0] px-[6%] py-[60px] md:px-[16%] md:py-[80px]">
