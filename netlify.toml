@@ -1,0 +1,15 @@
+# This is a single-page app: /movie/550 is a route React resolves in the
+# browser, not a file on disk. Without this rule Netlify looks for that file,
+# fails to find it, and serves its own 404 before any JavaScript runs — so the
+# site works while you click through it and breaks the moment someone opens a
+# shared link or hits reload.
+#
+# status 200 rather than 301: the address stays as it was, and the router reads
+# it on the way in. A redirect would rewrite it to / and lose the film.
+#
+# Build settings are deliberately left to the Netlify UI, where they already
+# work — declaring them here would override whatever is set there.
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
