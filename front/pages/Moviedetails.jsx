@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { API_URL } from '../src/api'
+import { watchLink } from '../src/watchLinks'
 
 const money = new Intl.NumberFormat('en-US', {
   style: 'currency',
@@ -270,10 +271,8 @@ export default function Moviedetails() {
                     <ul className="mt-[12px] flex flex-wrap gap-[10px]">
                       {watch[key].map((provider) => (
                         <li key={provider.provider_id}>
-                          {/* TMDB has no per-provider deep link, only one watch
-                              page for the country, so every tile points there. */}
                           <a
-                            href={watch.link}
+                            href={watchLink(provider, movie.title, watch.link)}
                             target="_blank"
                             rel="noreferrer"
                             className="flex items-center gap-[10px] border border-solid border-[#201E1D]/15 py-[8px] pr-[14px] pl-[8px] transition-colors duration-200 hover:border-[#EC3013]"
@@ -304,8 +303,8 @@ export default function Moviedetails() {
             {/* TMDB's terms require the streaming data to be credited to
                 JustWatch anywhere it is displayed. */}
             <p className="font-archivo mt-[20px] text-[12px] text-[#8A8580]">
-              Streaming data provided by JustWatch. Links open the TMDB watch page for{' '}
-              {countryName(activeCountry)}.
+              Streaming data provided by JustWatch. Links open this film on the provider's own
+              site.
             </p>
           </article>
         )}
