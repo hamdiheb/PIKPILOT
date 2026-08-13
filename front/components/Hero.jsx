@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import FoldText from './UI/FoldText'
 import Moviecomponent from './Moviecomponent'
 import { API_URL } from '../src/api'
+import { useSlowRequest } from '../src/useSlowRequest'
 
 export default function Hero() {
   const [query, setQuery] = useState('')
@@ -9,6 +10,11 @@ export default function Hero() {
   const [note, setNote] = useState('')
   const [pending, setPending] = useState(false)
   const [error, setError] = useState('')
+
+  // This request waits on a free model that regularly takes half a minute, on
+  // top of whatever the API itself needs, so it gets a longer fuse than the
+  // grid before it starts apologising.
+  const slow = useSlowRequest(pending, 10000)
 
   // The suggestions sit on one scrolling row. The arrows are driven from the
   // rail's own scroll position rather than an index, so a swipe, a trackpad and
@@ -180,7 +186,9 @@ export default function Hero() {
               <p className="font-archivo mt-[10px] max-w-[680px] text-[14px] leading-[1.55] whitespace-pre-line text-[#201E1D] md:text-[15px]">
                 {error ||
                   (pending
-                    ? 'Thinking it over...'
+                    ? slow
+                      ? 'Still thinking. The free model can take up to a minute to answer.'
+                      : 'Thinking it over...'
                     : note || 'Nothing came back for that. Try describing it differently.')}
               </p>
             )}

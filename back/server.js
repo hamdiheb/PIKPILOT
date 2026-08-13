@@ -48,6 +48,13 @@ app.use(cors({ origin: allowedOrigins.split(',') }))
 app.use(express.json({ limit: '10kb' }))
 app.use(generalLimiter)
 
+// Render's free instances sleep after about fifteen minutes without traffic,
+// and the next visitor waits some thirty seconds for the process to boot. An
+// external pinger calls this often enough that it never gets there. It answers
+// without touching TMDB so the ping stays cheap and does not start failing
+// because somebody else's API is having a bad day.
+app.get('/health', (req, res) => res.status(200).json({ message: 'ok' }))
+
 app.post('/suggestion', suggestionLimiter, aiSearcher)
 app.get('/movies', moviesDatabase)
 app.get('/movies/:id', movieDetails)

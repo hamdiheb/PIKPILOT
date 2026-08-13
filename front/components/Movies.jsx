@@ -2,9 +2,14 @@ import { useState, useEffect, useRef } from 'react'
 import Moviecomponent from './Moviecomponent'
 import Pagebutton from './Pagebutton'
 import { API_URL } from '../src/api'
+import { useSlowRequest } from '../src/useSlowRequest'
 export default function Movies(props) {
   const { movies, setMovies, genre, searchMovie, setTotal, loading, setLoading } = props
   const WINDOW = 10
+
+  // Only true once the wait is long enough to need explaining, which in
+  // practice means the API went to sleep and is booting.
+  const slow = useSlowRequest(loading)
 
   const [currentPage, setCurrentPage] = useState(1)
   const [lastPage, setLastPage] = useState(1)
@@ -89,17 +94,32 @@ export default function Movies(props) {
   return (
     <section className="shell pt-[4px] pb-[60px] md:pb-[80px]">
       {loading ? (
-        // Placeholders hold the grid open while a page loads, so the footer does
-        // not jump up and back down on every request.
-        <article className={gridClass} aria-hidden="true">
-          {Array.from({ length: 10 }).map((_, index) => (
-            <div key={index} className="animate-pulse">
-              <div className="aspect-[2/3] w-full bg-[#E3DED9]" />
-              <div className="mt-[12px] h-[15px] w-[80%] bg-[#E3DED9]" />
-              <div className="mt-[8px] h-[12px] w-[40%] bg-[#E3DED9]" />
-            </div>
-          ))}
-        </article>
+        <>
+          {/* The first request of the day wakes a sleeping instance, which is
+              slow enough that an unexplained set of placeholders reads as a
+              broken page. A warm server never reaches this. */}
+          {slow && (
+            <p
+              role="status"
+              className="font-archivo mt-[32px] text-[13px] leading-[1.5] text-[#5C5854]"
+            >
+              Waking the server up. The free host puts it to sleep when nobody is around, so this
+              first load can take up to a minute.
+            </p>
+          )}
+
+          {/* Placeholders hold the grid open while a page loads, so the footer
+              does not jump up and back down on every request. */}
+          <article className={gridClass} aria-hidden="true">
+            {Array.from({ length: 10 }).map((_, index) => (
+              <div key={index} className="animate-pulse">
+                <div className="aspect-[2/3] w-full bg-[#E3DED9]" />
+                <div className="mt-[12px] h-[15px] w-[80%] bg-[#E3DED9]" />
+                <div className="mt-[8px] h-[12px] w-[40%] bg-[#E3DED9]" />
+              </div>
+            ))}
+          </article>
+        </>
       ) : movies.length === 0 ? (
         <article className="mt-[32px] border border-solid border-[#201E1D]/15 px-[24px] py-[70px] text-center">
           <p className="font-archivo text-[18px] font-extrabold text-[#201E1D]">Nothing matched</p>
